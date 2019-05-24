@@ -54,9 +54,11 @@ namespace MvcDocument.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Amount,Description")] Document document)
         {
+
             if (ModelState.IsValid)
             {
                 _context.Add(document);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
