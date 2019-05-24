@@ -52,13 +52,17 @@ namespace MvcDocument.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Amount,Description")] Document document)
+        public async Task<IActionResult> Create([Bind("Id,Amount,Description, DocumentStatus")] Document document, DocumentStatus docstatus)
         {
-
             if (ModelState.IsValid)
             {
                 _context.Add(document);
-                
+                _context.Add(docstatus);
+                docstatus.DocumentId = document.Id;
+                docstatus.StatusId = 1;
+                DateTime datetime = DateTime.Now;
+                docstatus.DateTime = datetime;
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -139,7 +143,9 @@ namespace MvcDocument.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var document = await _context.Document.FindAsync(id);
+
             _context.Document.Remove(document);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
